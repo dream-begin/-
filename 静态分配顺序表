@@ -1,26 +1,57 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
-#define maxsize 20//定义数组最大值为10；
+#define maxsize 10
 typedef struct {
-	int data[maxsize];//用静态数组存放数据元素
-	int length;//顺序表的当前长度
-}sqlist;//顺序表的类型定义
-
-//基本操作--初始化一个顺序表
+	int data[maxsize];
+	int length;
+}sqlist;
 void initlist(sqlist& L)
 {
 	for (int i = 0; i < maxsize; i++)
-		L.data[i] = 0;//为顺序表的元素赋初值
-	L.length = 0;//初始化顺序表长度
+		L.data[i] = 0;
+		L.length = 0;
+}
+bool listinsert(sqlist& L, int i, int e)
+{
+	if (i<1 || i>L.length + 1)
+		return false;
+	if (L.length >= maxsize)
+		return false;
+	for (int j = L.length; j >= i; j--)
+		L.data[j] = L.data[j - 1];
+	L.data[i - 1] = e;
+	L.length++;
+	return true;
+
+}
+bool deletelist(sqlist& L, int i, int& e)//内存细节看不见
+{
+	if (i<1 || i>L.length)
+		return false;
+	e = L.data[i - 1];
+	for (int j = i; j < L.length; j++)
+		L.data[j - 1] = L.data[j];
+	L.length--;
+	return true;
 }
 int main()
 {
-	sqlist L;//定义一个顺序表
-	initlist(L);//初始化顺序表
-	for (int i = 0; i < L.length; i++)//循环输出顺序表中元素
-	{
-		printf("datd[%d]=%d\n", i, L.data[i]);
-		
-	}
+	int e=-1;
+	sqlist L;
+	initlist(L);
+	listinsert(L, 1, 1);
+	listinsert(L, 2, 2);
+	listinsert(L, 3, 3);
+	listinsert(L, 4, 4);
+	listinsert(L, 5, 5);
+	listinsert(L, 6, 6);
+	if (deletelist(L, 6, e))
+		printf("删除元素成功，元素为%d\n", e);
+	else
+		printf("位序不合法，删除失败\n");
+	for (int i = 0; i < L.length; i++)
+		printf("%d\n", L.data[i]);
+
 	return 0;
+
 }
