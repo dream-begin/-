@@ -2,34 +2,62 @@
 #include<stdio.h>
 #include<stdlib.h>
 #define initsize 10
-typedef struct//定义一个动态分配的顺序表
-{
+typedef struct {
 	int* data;
-	int length;//表长
-	int maxlength;//表的最大长度
+	int maxsize;
+	int length;
 }sqelist;
-void initlist(sqelist& L)//初始化顺序表
+void initlist(sqelist& L)
 {
 	L.data = (int*)malloc(sizeof(int) * initsize);
-		L.length = 0;
-	L.maxlength = initsize;
+	L.maxsize = initsize;
+	L.length = 0;
 }
-void increasesize(sqelist &L, int len)//扩大顺序表空间
+void increaselist(sqelist& L, int e)
 {
 	int* p = L.data;
-	L.data = (int*)malloc(sizeof(int) * (L.maxlength + len));
-	for (int i = 0; i <L.length; i++)
-	{
+	L.data = (int*)malloc(sizeof(int) * (L.maxsize + e));
+	for (int i = 0; i < L.length; i++)
 		L.data[i] = p[i];
-	}
-	L.maxlength = L.maxlength + len;
-	free(p);//释放扩大前的存储空间
+	L.maxsize += e;
+	free(p);
+}
+bool listinsert(sqelist& L, int i, int e)
+{
+	if (i<1 && i>L.length + 1)
+		return false;
+	if (L.length >= L.maxsize)
+		return false;
+	for (int j = L.length; j >= i; j--)
+		L.data[j] = L.data[j - 1];
+	L.length++;
+	return true;
+}
+bool deletelist(sqelist& L, int i, int &e)
+{
+	if (i<1 && i>L.length)
+		return false;
+	e = L.data[i - 1];
+	for (int j = i; j < L.length; j++)
+		L.data[j - 1] = L.data[j];
+	L.length--;
+	return true;
+}
+int getelem(sqelist L, int i)
+{
+	return L.data[i - 1];
+}
+int locateElem(sqelist L, int e)
+{
+	for (int i = 0; i < L.length; i++)
+		if (L.data[i] == e)
+			return i+1;
+	return 0;
 }
 int main()
 {
 	sqelist L;
 	initlist(L);
-	//输入几个元素
-	increasesize(L, 5);
-
+	locateElem(L, 45);
+	return 0;
 }
